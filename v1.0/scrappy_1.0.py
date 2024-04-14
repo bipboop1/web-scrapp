@@ -5,6 +5,7 @@ from colorama import Fore, Back, Style
 import time
 import random
 import re
+import os
 
 
 def is_valid_url(url):
@@ -90,6 +91,10 @@ start_url = input("url:") # URL to start scraping from
 domain_name = urlparse(start_url).netloc  # Extracts domain to stay within the same site
 sanitized_domain_name = sanitize_filename(domain_name) 
 
+subdir = "outputs"
+if not os.path.exists(subdir):
+	os.makedirs(subdir)
+
 # Collect all unique URLs from the website
 visited_urls = get_all_website_links(start_url, domain_name, set())
 
@@ -97,6 +102,7 @@ visited_urls = get_all_website_links(start_url, domain_name, set())
 texts = scrape_text_from_urls(visited_urls)
 
 # write to file
-with open(f"scrapped_texts_{sanitized_domain_name}.txt", "w", encoding="utf-8") as file:
+output_path = os.path.join(subdir, f"scrapped_texts_{sanitized_domain_name}.txt")
+with open(output_path, "w", encoding="utf-8") as file:
 	for text in texts:
 		file.write(f"{text}\n\n---\n\n")
