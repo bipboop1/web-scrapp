@@ -55,16 +55,25 @@ def get_all_website_links(url, domain_name, visited):
 				get_all_website_links(href, domain_name, visited)
 	return visited
 
-def scrape_text_from_urls(urls):
+def scrape_text_from_urls(urls, texts_to_write=1):
 	all_text = []
 	for url in urls:
 		response = fetch_html(url)
 		if response:
 			soup = BeautifulSoup(response.text, 'html.parser')
-			text = soup.get_text(separator='\n', strip=True)
 			all_text.append(text)
-		time.sleep(random.randint(10, 20))
+			# Write texts after every 'texts_to_write' iterations
+			if (i + 1) % texts_to_write == 0:
+				write_text_to_file(all_text)  # Call function to write
+				all_text = []  # Clear the temporary list
+	# Write any remaining text after the loop
+	write_text_to_file(all_text)
 	return all_text
+
+def write_text_to_file(texts):
+	with open(output_path, "a", encoding="utf-8") as file:
+		for text in texts:
+			file.write(f"{text}\n\n---\n\n")
 
 def intro():
 	print(f"\n")
@@ -96,11 +105,5 @@ if not os.path.exists(subdir):
 # Collect all unique URLs from the website
 visited_urls = get_all_website_links(start_url, domain_name, set())
 
-# Extract text from each URL
-texts = scrape_text_from_urls(visited_urls)
-
-# write to file
 output_path = os.path.join(subdir, f"scrapped_texts_{sanitized_domain_name}.txt")
-with open(output_path, "w", encoding="utf-8") as file:
-	for text in texts:
-		file.write(f"{text}\n\n---\n\n")
+texts = scrape_text_from_urls(visited_urls, texts_to_write=2)  # Write every n texts
