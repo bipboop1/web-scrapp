@@ -55,6 +55,7 @@ def get_all_website_links(url, domain_name, visited):
 				get_all_website_links(href, domain_name, visited)
 	return visited
 
+# main scraping function:
 def scrape_text_from_urls(urls, subdir, sanitized_domain_name):
 	for url in urls:
 		response = fetch_html(url)
@@ -64,7 +65,7 @@ def scrape_text_from_urls(urls, subdir, sanitized_domain_name):
 			# open file to append text and close it
 			output_path = os.path.join(subdir, f"scrapped_texts_{sanitized_domain_name}.txt")
 			with open(output_path, "a", encoding="utf-8") as file:
-				file.write(f"{text}\n\n---\n\n")
+				file.write(f"url:{url}\n\n{text}\n\n---\n\n")
 		time.sleep(random.randint(10, 20))
 
 def intro():
@@ -73,7 +74,7 @@ def intro():
 	print(f"{Fore.CYAN}▀▄▀▄▀▄▀▄▀▄ {Fore.CYAN} welcome to my  {Fore.CYAN}▄▀▄▀▄▀▄▀▄▀ ")
 	print(f"{Fore.CYAN}▀▄▀▄				 ▄▀▄▀{Style.RESET_ALL}")
 	print(f"{Fore.CYAN}▀▄▀▄	  {Fore.YELLOW}♥ {Fore.RED}Scrappy {Fore.MAGENTA}v1.2{Fore.YELLOW} ♥{Fore.CYAN}	 ▄▀▄▀{Style.RESET_ALL}")
-	print(f"\033[3m{Fore.CYAN}▀▄▀▄	  {Fore.CYAN}cool web scrapper	 {Fore.CYAN}▄▀▄▀{Style.RESET_ALL}")
+	print(f"\033[3m{Fore.CYAN}▀▄▀▄	 {Fore.CYAN}cool web scrapper	 {Fore.CYAN}▄▀▄▀{Style.RESET_ALL}")
 	print(f"{Fore.CYAN}▀▄▀▄				 ▄▀▄▀{Style.RESET_ALL}")
 	print(f"{Fore.CYAN}▀▄▀▄				 ▄▀▄▀{Style.RESET_ALL}")
 	# print(f"{Fore.CYAN}▀▄▀▄{Fore.CYAN}			by {Fore.YELLOW}elt0n {Fore.CYAN}▄▀▄▀{Style.RESET_ALL}")
